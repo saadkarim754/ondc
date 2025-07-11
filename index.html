@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ONDC: The Battle for India's Digital Marketplace</title>
     <!-- Chosen Palette: Warm Neutral Harmony -->
-    <!-- Application Structure Plan: A single-page, scrolling narrative application divided into four thematic sections corresponding to the user's request (Context, Problem, Solution, Challenges). This structure guides the user through a logical story, from the history of the issue to the proposed solution and its future hurdles. A sticky navigation bar allows for both linear exploration and direct access to specific topics. Interactive elements like clickable cards and dynamic charts are used within each section to break down complex information and engage the user, making it more digestible and memorable than a static report. This structure is ideal for a 4-person group presentation, as each member can own a distinct, self-contained section. -->
-    <!-- Visualization & Content Choices: 
+    <!-- Application Structure Plan: A single-page, scrolling narrative application divided into four thematic sections (Context, Problem, Solution, Challenges). This structure guides the user through a logical story, from the history of the issue to the proposed solution, its progress, and future hurdles. A sticky navigation bar allows for both linear exploration and direct access to specific topics. Interactive elements like clickable cards, dynamic charts, and detailed HTML/CSS diagrams are used within each section to break down complex information and engage the user, making it more digestible and memorable than a static report. This structure is ideal for a 4-person group presentation, as each member can own a distinct, self-contained section: Partner 1 (Context), Partner 2 (The Problem), Partner 3 (The ONDC Solution & Architecture), Partner 4 (ONDC Progress & Challenges). -->
+    <!-- Visualization & Content Choices:
         - Context (E-commerce Models): Goal: Inform/Compare. Method: Interactive Cards (HTML/CSS/JS). Interaction: Click to reveal details. Justification: More engaging than a static table, allowing focused learning.
         - Problem (Market Imbalance): Goal: Compare. Method: Bar Chart (Chart.js). Interaction: Hover tooltips. Justification: Clearly visualizes the power disparity between large platforms and small sellers.
-        - Solution (ONDC Network): Goal: Organize/Relationships. Method: Diagram (HTML/CSS/JS). Interaction: Hover effects. Justification: Illustrates the complex "network of networks" concept clearly without using forbidden SVG.
+        - Solution (ONDC Network Architecture): Goal: Organize/Relationships. Method: Detailed HTML/CSS Diagram. Interaction: Static visual explanation. Justification: Clearly illustrates the multi-layered components and flow of ONDC without using forbidden SVG, crucial for understanding "Design architecture and system of ONDC".
         - Solution (Benefits): Goal: Inform (Proportions). Method: Donut Chart (Chart.js). Interaction: Hover tooltips. Justification: Provides a quick, visual breakdown of ONDC's advantages for stakeholders.
-        - Challenges (Data Points): Goal: Inform (Stats). Method: Multiple Bar Charts (Chart.js). Interaction: Hover tooltips. Justification: Presents key statistical challenges from the report in a visually scannable and impactful format.
+        - Challenges (User Experience, Adoption, Industry Outlook): Goal: Inform (Stats). Method: Bar Charts (Chart.js). Interaction: Hover tooltips. Justification: Presents key statistical challenges in a visually scannable format.
+        - Challenges (Transaction Growth): Goal: Change/Inform. Method: Line Chart (Chart.js). Interaction: Hover tooltips. Justification: Visualizes the growth in transactions from launch to present, addressing "transactions today" and "at launch".
+        - Key Metrics (Users, India Usage, Costs, Charges): Goal: Inform. Method: Textual callouts and simple numerical displays. Interaction: Static. Justification: Presents specific data points clearly.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,11 +25,45 @@
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F4; }
         .nav-link.active { color: #B45309; border-bottom-color: #B45309; }
         .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (max-width: 768px) { .chart-container { height: 300px; max-height: 350px; } }
+        @media (max-width: 768px) {.chart-container { height: 300px; max-height: 350px; } }
         .card-flip { transition: transform 0.6s; transform-style: preserve-3d; }
         .card-flipper.flipped .card-flip { transform: rotateY(180deg); }
-        .card-front, .card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .card-front,.card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .card-back { transform: rotateY(180deg); }
+
+        /* ONDC Architecture Diagram Styles (replacing Tailwind @apply with equivalent CSS) */
+        .architecture-node {
+            background-color: #fff;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px 0 rgba(0,0,0,0.06);
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 1px solid #e7e5e4;
+        }
+        .architecture-layer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+        .architecture-arrow {
+            color: #a8a29e;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        /* UI improvement: subtle hover for architecture nodes */
+        .architecture-node:hover {
+            box-shadow: 0 4px 14px 0 rgba(180,83,9,0.10), 0 2px 4px 0 rgba(0,0,0,0.06);
+            border-color: #f59e42;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        /* UI improvement: highlight nav-link on hover */
+        .nav-link:hover {
+            color: #B45309;
+            border-bottom: 2px solid #B45309;
+        }
     </style>
 </head>
 <body class="bg-stone-100 text-stone-800">
@@ -39,7 +75,7 @@
                 <a href="#context" class="nav-link text-stone-600 hover:text-amber-700 font-medium border-b-2 border-transparent pb-1 transition-colors duration-300">Context</a>
                 <a href="#problem" class="nav-link text-stone-600 hover:text-amber-700 font-medium border-b-2 border-transparent pb-1 transition-colors duration-300">The Problem</a>
                 <a href="#solution" class="nav-link text-stone-600 hover:text-amber-700 font-medium border-b-2 border-transparent pb-1 transition-colors duration-300">The Solution</a>
-                <a href="#challenges" class="nav-link text-stone-600 hover:text-amber-700 font-medium border-b-2 border-transparent pb-1 transition-colors duration-300">Challenges</a>
+                <a href="#progress-challenges" class="nav-link text-stone-600 hover:text-amber-700 font-medium border-b-2 border-transparent pb-1 transition-colors duration-300">Progress & Challenges</a>
             </div>
         </nav>
     </header>
@@ -82,7 +118,7 @@
                     </div>
                 </div>
             </div>
-        section>
+        </section>
 
         <section id="problem" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
@@ -118,49 +154,115 @@
         <section id="solution" class="py-16 md:py-24 bg-stone-50">
             <div class="container mx-auto px-6">
                 <div class="text-center max-w-3xl mx-auto mb-12">
-                    <h3 class="text-3xl md:text-4xl font-bold text-stone-900">3. A New Alliance: The ONDC Solution</h3>
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-900">3. A New Alliance: The ONDC Solution & Architecture</h3>
                      <p class="mt-4 text-stone-600">In response to these challenges, the Indian government launched ONDC. It's not another app or platform, but a revolutionary open network—a set of rules and tools that allows any buyer and seller application to talk to each other. The goal is to break down the walled gardens of dominant platforms and democratize digital commerce.</p>
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
                     <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <h4 class="text-xl font-bold text-center mb-4">How ONDC Connects Everyone</h4>
-                        <div class="relative flex flex-col items-center space-y-4">
-                             <div class="w-full p-3 bg-amber-100 border-2 border-amber-300 rounded-lg text-center">
-                                <span class="font-bold text-amber-800">Buyer Apps (Paytm, PhonePe, etc.)</span>
-                            </div>
-                            <div class="text-3xl text-stone-400">↓ ↑</div>
-                             <div class="w-full p-4 bg-blue-600 rounded-xl text-center text-white shadow-md">
-                                <span class="text-xl font-bold">ONDC NETWORK</span>
-                                <p class="text-sm text-blue-100">(The Common Language)</p>
-                            </div>
-                            <div class="text-3xl text-stone-400">↓ ↑</div>
-                             <div class="w-full grid grid-cols-2 gap-3">
-                                <div class="p-3 bg-green-100 border-2 border-green-300 rounded-lg text-center"><span class="font-bold text-green-800 text-sm">Local Stores</span></div>
-                                <div class="p-3 bg-green-100 border-2 border-green-300 rounded-lg text-center"><span class="font-bold text-green-800 text-sm">Supermarkets</span></div>
-                                <div class="p-3 bg-green-100 border-2 border-green-300 rounded-lg text-center"><span class="font-bold text-green-800 text-sm">Restaurants</span></div>
-                                <div class="p-3 bg-green-100 border-2 border-green-300 rounded-lg text-center"><span class="font-bold text-green-800 text-sm">Logistics</span></div>
-                            </div>
-                        </div>
-                         <p class="text-center text-sm text-stone-500 mt-4">A seller listed on one ONDC-enabled app becomes visible on ALL buyer apps on the network.</p>
-                    </div>
-                    <div>
-                         <div class="chart-container">
+                        <h4 class="text-xl font-bold text-center mb-4">ONDC Key Advantages</h4>
+                        <div class="chart-container">
                             <canvas id="benefitsChart"></canvas>
                         </div>
                         <p class="text-center text-sm text-stone-500 mt-2">Key benefits for sellers and consumers.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h4 class="text-xl font-bold text-center mb-4">ONDC Charges & Costs</h4>
+                        <div class="space-y-4 text-stone-700">
+                            <p><span class="font-semibold text-amber-700">ONDC Charges:</span> The ONDC network itself is a non-profit initiative by the government and initially operated on a zero-commission model. However, it **plans to introduce a nominal fee of Rs 1.5 per transaction for orders above Rs 250**.</p>
+                            <p><span class="font-semibold text-amber-700">Participant Fees:</span> Individual network participants (Buyer Apps, Seller Apps, Logistics Providers, etc.) may charge their own fees or commissions for the services they provide. These are determined by the respective apps and not by ONDC.</p>
+                            <p><span class="font-semibold text-amber-700">Infrastructure Costs:</span> ONDC's infrastructure costs are relatively low due to its open-source, decentralized nature. It relies on existing digital public infrastructure (like UPI for payments) and a federated model where participants bear the cost of their own applications and services, rather than a single entity building and maintaining a monolithic platform.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC Network Architecture</h4>
+                    <p class="mt-4 text-stone-600">ONDC operates as a 'network of networks', facilitating seamless communication between various participants. This diagram illustrates the core components and their interactions, enabling a truly open e-commerce ecosystem.</p>
+                </div>
+
+                <div class="flex flex-col items-center max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-stone-200">
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-blue-100 text-blue-800">Buyer App (e.g., Paytm, PhonePe)</div>
+                    </div>
+                    <div class="architecture-arrow">↓</div>
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-amber-100 text-amber-800">Buyer Side Network Participant (BNP)</div>
+                    </div>
+                    <div class="architecture-arrow">↓</div>
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-green-100 text-green-800">ONDC Gateway (Discovery & Routing)</div>
+                    </div>
+                    <div class="architecture-arrow">↓ ↑</div>
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-purple-100 text-purple-800">ONDC Core Protocol (APIs & Standards)</div>
+                    </div>
+                    <div class="architecture-arrow">↓ ↑</div>
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-amber-100 text-amber-800">Seller Side Network Participant (SNP)</div>
+                    </div>
+                    <div class="architecture-arrow">↓</div>
+                    <div class="architecture-layer mb-4">
+                        <div class="architecture-node bg-blue-100 text-blue-800">Seller App (e.g., Mystore, GoFrugal)</div>
+                    </div>
+                    <div class="architecture-arrow">↓</div>
+                    <div class="architecture-layer mb-4 flex-wrap">
+                        <div class="architecture-node bg-stone-100 text-stone-700">Local Seller</div>
+                        <div class="architecture-node bg-stone-100 text-stone-700">Logistics Provider</div>
+                        <div class="architecture-node bg-stone-100 text-stone-700">Payment Gateway</div>
+                    </div>
+                    <p class="text-center text-sm text-stone-500 mt-4">This architecture allows any buyer app to discover products/services from any seller app on the network, fostering interoperability.</p>
+                </div>
+
+                <div class="text-center max-w-3xl mx-auto mt-16 mb-12">
+                    <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC's Open-Source Foundation (Infrastructure Code)</h4>
+                    <p class="mt-4 text-stone-600">ONDC is not a single software application but a set of open specifications and protocols designed to enable seamless interaction between different e-commerce platforms. Its core is built on the **Beckn Protocol**, an open and interoperable protocol for decentralized digital commerce.</p>
+                    <div class="space-y-4 text-stone-700 mt-6">
+                        <p>While ONDC itself provides a registry and gateway infrastructure, the "code" for the network primarily exists in the form of open-source resources for participants:</p>
+                        <ul class="list-disc list-inside text-left mx-auto max-w-xl">
+                            <li>**Beckn Protocol Server:** A reference implementation that helps applications connect to the Beckn Network.</li>
+                            <li>**White-Label Applications:** ONDC offers pre-built code frameworks for buyer, seller, and logistics seller apps. These "white-label" solutions allow new network participants to quickly integrate and customize their applications to match their branding and needs.</li>
+                            <li>**API Specifications:** Comprehensive API specifications (e.g., Swagger Hub links) are provided for developers to build compatible applications.</li>
+                        </ul>
+                        <p class="text-stone-600 mt-4">ONDC leverages cloud infrastructure (such as Google Cloud's GKE, Cloud Run, BigQuery, Dataflow, Dataproc, and Vertex AI) to ensure scalability and robust data analytics capabilities.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="challenges" class="py-16 md:py-24 bg-white">
+        <section id="progress-challenges" class="py-16 md:py-24 bg-white">
             <div class="container mx-auto px-6">
                  <div class="text-center max-w-3xl mx-auto mb-12">
-                    <h3 class="text-3xl md:text-4xl font-bold text-stone-900">4. The Road Ahead: Challenges for ONDC</h3>
+                    <h3 class="text-3xl md:text-4xl font-bold text-stone-900">4. ONDC Progress & Challenges</h3>
                     <p class="mt-4 text-stone-600">While ONDC's vision is powerful, the journey is filled with significant hurdles. Success is not guaranteed and depends on overcoming technical complexities, building user trust, and navigating resistance from the very giants it aims to challenge. The data reveals a cautious but growing ecosystem.</p>
                 </div>
-                
+
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC Transaction Growth & Key Metrics</h4>
+                    <p class="mt-4 text-stone-600">Since its launch, ONDC has seen a steady increase in transactions and participant engagement, indicating growing momentum in its mission to democratize digital commerce.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto mb-16">
+                    <div>
+                        <div class="chart-container">
+                            <canvas id="transactionsChart"></canvas>
+                        </div>
+                        <p class="text-center text-sm text-stone-500 mt-2">Cumulative transactions growth since launch (March 2023 to March 2025).</p>
+                    </div>
+                    <div class="space-y-6 text-center md:text-left">
+                        <div class="p-6 bg-stone-50 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-lg text-amber-700">Total Cumulative Transactions</h4>
+                            <p class="text-4xl font-bold text-stone-900 mt-2">Over 20.4 Crore</p>
+                            <p class="text-stone-600 text-sm mt-1">as of March 2025.</p>
+                        </div>
+                        <div class="p-6 bg-stone-50 rounded-lg shadow-sm">
+                            <h4 class="font-bold text-lg text-blue-700">Total Sellers & Service Providers</h4>
+                            <p class="text-4xl font-bold text-stone-900 mt-2">Over 7.6 Lakh</p>
+                            <p class="text-stone-600 text-sm mt-1">across 588+ cities.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="bg-stone-50 p-6 rounded-xl">
                         <h4 class="font-bold text-center mb-2">User Experience Hurdles</h4>
@@ -191,7 +293,7 @@
     <footer class="bg-stone-800 text-white py-8">
         <div class="container mx-auto px-6 text-center">
             <p class="text-stone-400">An interactive presentation on the Open Network for Digital Commerce (ONDC).</p>
-            <p class="text-sm text-stone-500 mt-2">Created based on public research reports.</p>
+            <p class="text-sm text-stone-500 mt-2">Note: Transaction data in the chart is illustrative for intermediate periods, with key milestones based on available research.</p>
         </div>
     </footer>
 
@@ -301,12 +403,39 @@
                  });
             }
 
+            function createTransactionsChart() {
+                const ctx = document.getElementById('transactionsChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['March 2023 (Launch)', 'Sept 2023', 'March 2024', 'Sept 2024', 'March 2025'],
+                        datasets: [{
+                            label: 'Cumulative Transactions (Crore)',
+                            data: [0.00001, 0.001, 0.01, 10, 20.4], /* Data points are illustrative for intermediate periods, with 10 Crore by Sept 2024 and 20.4 Crore by March 2025 based on research */
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'ONDC Cumulative Transaction Growth' }
+                        },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Transactions (Crore)' } } }
+                    }
+                });
+            }
+
             createProblemChart();
             createBenefitsChart();
-
             createChallengeChart('uxChart', 'User Experience (May 2025)', ['Find it cumbersome', 'Satisfied'], [54, 46]);
             createChallengeChart('adoptionChart', 'Key Concerns', ['Poor Service', 'Tech Hurdles'], [35, 30]);
             createChallengeChart('resistanceChart', 'Industry Expectations', ['Expect Resistance', 'Disrupts Models'], [26, 34]);
+            createTransactionsChart();
 
         });
     </script>
