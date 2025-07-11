@@ -17,21 +17,52 @@
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F5F5F4; }
         .nav-link.active { color: #B45309; border-bottom-color: #B45309; }
-        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
-        @media (max-width: 768px) {.chart-container { height: 300px; max-height: 350px; } }
         .card-flip { transition: transform 0.6s; transform-style: preserve-3d; }
         .card-flipper.flipped .card-flip { transform: rotateY(180deg); }
         .card-front,.card-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .card-back { transform: rotateY(180deg); }
 
-        /* ONDC Architecture Diagram Styles (replacing Tailwind @apply with equivalent CSS) */
+        /* Interactive Architecture Styles */
+        .architecture-layer {
+            margin: 1rem 0;
+            position: relative;
+        }
+        .architecture-layer h4 {
+            background: linear-gradient(135deg, #B45309, #F59E0B);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem 0.5rem 0 0;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .architecture-layer h4:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
+        }
+        .architecture-content {
+            background: white;
+            border: 2px solid #F59E0B;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        .architecture-content.active {
+            display: block;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .architecture-node {
             background-color: #fff;
             padding: 0.75rem;
@@ -41,28 +72,38 @@
             font-weight: 600;
             font-size: 0.875rem;
             border: 1px solid #e7e5e4;
+            margin: 0.5rem;
+            display: inline-block;
+            transition: all 0.2s ease;
         }
-        .architecture-layer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-        }
-        .architecture-arrow {
-            color: #a8a29e;
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-        /* UI improvement: subtle hover for architecture nodes */
         .architecture-node:hover {
             box-shadow: 0 4px 14px 0 rgba(180,83,9,0.10), 0 2px 4px 0 rgba(0,0,0,0.06);
             border-color: #f59e42;
-            transition: box-shadow 0.2s, border-color 0.2s;
+            transform: translateY(-2px);
         }
-        /* UI improvement: highlight nav-link on hover */
         .nav-link:hover {
             color: #B45309;
             border-bottom: 2px solid #B45309;
+        }
+        
+        /* Bullet point styling */
+        .custom-bullets {
+            list-style: none;
+            padding-left: 0;
+        }
+        .custom-bullets li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+        .custom-bullets li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #B45309;
+            font-weight: bold;
+            font-size: 1.2em;
         }
     </style>
 </head>
@@ -141,11 +182,15 @@
                             <p class="text-stone-600 text-sm">High costs for warehousing and delivery, especially outside major cities, make it hard for small sellers to compete on speed and price.</p>
                         </div>
                     </div>
-                    <div>
-                        <div class="chart-container">
-                            <canvas id="problemChart"></canvas>
-                        </div>
-                        <p class="text-center text-sm text-stone-500 mt-2">Visualizing the market power imbalance.</p>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h4 class="text-xl font-bold text-center mb-4 text-red-600">Market Power Imbalance</h4>
+                        <ul class="custom-bullets space-y-3">
+                            <li><strong>Dominant Platforms:</strong> Control ~90% of market visibility and customer reach</li>
+                            <li><strong>Local Sellers:</strong> Limited to ~25% effective market access despite having quality products</li>
+                            <li><strong>Algorithm Bias:</strong> Search results favor platforms' preferred sellers</li>
+                            <li><strong>Commission Burden:</strong> High fees (15-30%) eat into small seller profits</li>
+                            <li><strong>Data Monopoly:</strong> Customer data locked within platform ecosystems</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -160,11 +205,15 @@
 
                 <div class="grid lg:grid-cols-2 gap-12 items-center mb-16">
                     <div class="bg-white p-6 rounded-xl shadow-lg">
-                        <h4 class="text-xl font-bold text-center mb-4">ONDC Key Advantages</h4>
-                        <div class="chart-container">
-                            <canvas id="benefitsChart"></canvas>
-                        </div>
-                        <p class="text-center text-sm text-stone-500 mt-2">Key benefits for sellers and consumers.</p>
+                        <h4 class="text-xl font-bold text-center mb-4 text-green-600">ONDC Key Advantages</h4>
+                        <ul class="custom-bullets space-y-3">
+                            <li><strong>Lower Commissions:</strong> Reduced fees for sellers (35% impact)</li>
+                            <li><strong>Wider Market Reach:</strong> Access to entire network ecosystem (30% impact)</li>
+                            <li><strong>Better Prices:</strong> Increased competition benefits consumers (20% impact)</li>
+                            <li><strong>Hyperlocal Delivery:</strong> Faster, cheaper local services (15% impact)</li>
+                            <li><strong>Data Democracy:</strong> Sellers own their customer relationships</li>
+                            <li><strong>Innovation Freedom:</strong> Open standards encourage new solutions</li>
+                        </ul>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-lg">
                         <h4 class="text-xl font-bold text-center mb-4">ONDC Charges & Costs</h4>
@@ -178,53 +227,135 @@
 
                 <div class="text-center max-w-3xl mx-auto mb-12">
                     <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC Network Architecture</h4>
-                    <p class="mt-4 text-stone-600">ONDC operates as a 'network of networks', facilitating seamless communication between various participants. This diagram illustrates the core components and their interactions, enabling a truly open e-commerce ecosystem.</p>
+                    <p class="mt-4 text-stone-600">ONDC operates as a 'network of networks', facilitating seamless communication between various participants. Click on each layer to explore the components and their interactions in this truly open e-commerce ecosystem.</p>
                 </div>
 
-                <div class="flex flex-col items-center max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-stone-200">
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-blue-100 text-blue-800">Buyer App (e.g., Paytm, PhonePe)</div>
+                <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg border border-stone-200">
+                    <!-- Layer 1: Buyer Side -->
+                    <div class="architecture-layer">
+                        <h4 onclick="toggleLayer('buyer-layer')">🛒 Buyer Side (Consumer Interface)</h4>
+                        <div id="buyer-layer" class="architecture-content">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="architecture-node bg-blue-100 text-blue-800">
+                                    <strong>Buyer Apps</strong><br>
+                                    <small>Paytm, PhonePe, Magicpin</small>
+                                </div>
+                                <div class="architecture-node bg-blue-100 text-blue-800">
+                                    <strong>Buyer Network Participant</strong><br>
+                                    <small>Handles buyer requests & transactions</small>
+                                </div>
+                            </div>
+                            <p class="text-sm text-stone-600 mt-3">Consumer-facing applications where users browse, search, and purchase products. These apps connect to the ONDC network to discover products from any seller.</p>
+                        </div>
                     </div>
-                    <div class="architecture-arrow">↓</div>
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-amber-100 text-amber-800">Buyer Side Network Participant (BNP)</div>
+
+                    <!-- Layer 2: Core ONDC Infrastructure -->
+                    <div class="architecture-layer">
+                        <h4 onclick="toggleLayer('core-layer')">🌐 ONDC Core Infrastructure</h4>
+                        <div id="core-layer" class="architecture-content">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="architecture-node bg-green-100 text-green-800">
+                                    <strong>ONDC Gateway</strong><br>
+                                    <small>Discovery & Routing Hub</small>
+                                </div>
+                                <div class="architecture-node bg-purple-100 text-purple-800">
+                                    <strong>Beckn Protocol</strong><br>
+                                    <small>APIs & Open Standards</small>
+                                </div>
+                            </div>
+                            <p class="text-sm text-stone-600 mt-3">The heart of ONDC - enables any buyer app to discover products from any seller app through standardized protocols and APIs.</p>
+                        </div>
                     </div>
-                    <div class="architecture-arrow">↓</div>
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-green-100 text-green-800">ONDC Gateway (Discovery & Routing)</div>
+
+                    <!-- Layer 3: Seller Side -->
+                    <div class="architecture-layer">
+                        <h4 onclick="toggleLayer('seller-layer')">🏪 Seller Side (Business Interface)</h4>
+                        <div id="seller-layer" class="architecture-content">
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="architecture-node bg-amber-100 text-amber-800">
+                                    <strong>Seller Apps</strong><br>
+                                    <small>Mystore, GoFrugal, eSamudaay</small>
+                                </div>
+                                <div class="architecture-node bg-amber-100 text-amber-800">
+                                    <strong>Seller Network Participant</strong><br>
+                                    <small>Manages seller operations</small>
+                                </div>
+                                <div class="architecture-node bg-orange-100 text-orange-800">
+                                    <strong>Local Businesses</strong><br>
+                                    <small>Kirana stores, restaurants, services</small>
+                                </div>
+                            </div>
+                            <p class="text-sm text-stone-600 mt-3">Business-facing applications where sellers list products, manage inventory, and fulfill orders. Connects local businesses to the entire ONDC network.</p>
+                        </div>
                     </div>
-                    <div class="architecture-arrow">↓ ↑</div>
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-purple-100 text-purple-800">ONDC Core Protocol (APIs & Standards)</div>
+
+                    <!-- Layer 4: Support Services -->
+                    <div class="architecture-layer">
+                        <h4 onclick="toggleLayer('support-layer')">🚚 Support Ecosystem</h4>
+                        <div id="support-layer" class="architecture-content">
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="architecture-node bg-yellow-100 text-yellow-800">
+                                    <strong>Logistics Providers</strong><br>
+                                    <small>Dunzo, Porter, Local delivery</small>
+                                </div>
+                                <div class="architecture-node bg-indigo-100 text-indigo-800">
+                                    <strong>Payment Gateways</strong><br>
+                                    <small>UPI, Credit cards, Digital wallets</small>
+                                </div>
+                                <div class="architecture-node bg-pink-100 text-pink-800">
+                                    <strong>Tech Service Providers</strong><br>
+                                    <small>API platforms, white-label solutions</small>
+                                </div>
+                            </div>
+                            <p class="text-sm text-stone-600 mt-3">Essential services that enable transactions - from payment processing to last-mile delivery. These operate independently but integrate seamlessly through ONDC protocols.</p>
+                        </div>
                     </div>
-                    <div class="architecture-arrow">↓ ↑</div>
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-amber-100 text-amber-800">Seller Side Network Participant (SNP)</div>
+
+                    <div class="mt-6 p-4 bg-stone-50 rounded-lg">
+                        <p class="text-center text-sm text-stone-600"><strong>Key Innovation:</strong> This architecture allows any buyer app to discover products/services from any seller app on the network, breaking down platform silos and fostering true interoperability.</p>
                     </div>
-                    <div class="architecture-arrow">↓</div>
-                    <div class="architecture-layer mb-4">
-                        <div class="architecture-node bg-blue-100 text-blue-800">Seller App (e.g., Mystore, GoFrugal)</div>
-                    </div>
-                    <div class="architecture-arrow">↓</div>
-                    <div class="architecture-layer mb-4 flex-wrap">
-                        <div class="architecture-node bg-stone-100 text-stone-700">Local Seller</div>
-                        <div class="architecture-node bg-stone-100 text-stone-700">Logistics Provider</div>
-                        <div class="architecture-node bg-stone-100 text-stone-700">Payment Gateway</div>
-                    </div>
-                    <p class="text-center text-sm text-stone-500 mt-4">This architecture allows any buyer app to discover products/services from any seller app on the network, fostering interoperability.</p>
                 </div>
 
-                <div class="text-center max-w-3xl mx-auto mt-16 mb-12">
-                    <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC's Open-Source Foundation (Infrastructure Code)</h4>
-                    <p class="mt-4 text-stone-600">ONDC is not a single software application but a set of open specifications and protocols designed to enable seamless interaction between different e-commerce platforms. Its core is built on the **Beckn Protocol**, an open and interoperable protocol for decentralized digital commerce.</p>
-                    <div class="space-y-4 text-stone-700 mt-6">
-                        <p>While ONDC itself provides a registry and gateway infrastructure, the "code" for the network primarily exists in the form of open-source resources for participants:</p>
-                        <ul class="list-disc list-inside text-left mx-auto max-w-xl">
-                            <li>**Beckn Protocol Server:** A reference implementation that helps applications connect to the Beckn Network.</li>
-                            <li>**White-Label Applications:** ONDC offers pre-built code frameworks for buyer, seller, and logistics seller apps. These "white-label" solutions allow new network participants to quickly integrate and customize their applications to match their branding and needs.</li>
-                            <li>**API Specifications:** Comprehensive API specifications (e.g., Swagger Hub links) are provided for developers to build compatible applications.</li>
-                        </ul>
-                        <p class="text-stone-600 mt-4">ONDC leverages cloud infrastructure (such as Google Cloud's GKE, Cloud Run, BigQuery, Dataflow, Dataproc, and Vertex AI) to ensure scalability and robust data analytics capabilities.</p>
+                <div class="text-center max-w-4xl mx-auto mt-16 mb-12">
+                    <h4 class="text-2xl md:text-3xl font-bold text-stone-900">Understanding ONDC's Technical Foundation</h4>
+                    <div class="bg-white p-8 rounded-xl shadow-lg mt-6 text-left">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h5 class="text-lg font-bold text-amber-700 mb-4">🛠️ What ONDC Actually Is</h5>
+                                <ul class="custom-bullets space-y-2 text-sm">
+                                    <li>Not a single app or platform, but a <strong>set of open protocols</strong></li>
+                                    <li>Built on the <strong>Beckn Protocol</strong> - think of it as the "language" that allows different e-commerce apps to talk to each other</li>
+                                    <li>A <strong>network of networks</strong> that connects existing and new apps</li>
+                                    <li>Government-backed <strong>digital public infrastructure</strong> (like UPI for payments)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="text-lg font-bold text-blue-700 mb-4">💻 How Developers Can Join</h5>
+                                <ul class="custom-bullets space-y-2 text-sm">
+                                    <li><strong>Beckn Protocol Server:</strong> Ready-to-use software that helps apps connect to ONDC</li>
+                                    <li><strong>White-Label Solutions:</strong> Pre-built app templates for buyers, sellers, and logistics</li>
+                                    <li><strong>Open API Specifications:</strong> Detailed guides on developer portals and Swagger Hub</li>
+                                    <li><strong>Cloud Infrastructure:</strong> Uses Google Cloud services for reliability and scale</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
+                            <h5 class="text-lg font-bold text-green-700 mb-3">🚀 Real-World Impact</h5>
+                            <p class="text-sm text-stone-700">Imagine WhatsApp, Telegram, and Signal users being able to message each other seamlessly. That's what ONDC does for e-commerce - it breaks down the walls between different shopping apps, allowing customers on Paytm to buy from sellers using completely different platforms like Mystore or GoFrugal.</p>
+                            
+                            <div class="mt-4 grid md:grid-cols-3 gap-4 text-xs">
+                                <div class="bg-white p-3 rounded border">
+                                    <strong>For Developers:</strong> Build once, reach the entire network
+                                </div>
+                                <div class="bg-white p-3 rounded border">
+                                    <strong>For Businesses:</strong> Access customers from any buyer app
+                                </div>
+                                <div class="bg-white p-3 rounded border">
+                                    <strong>For Consumers:</strong> More choice, better prices, local options
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,15 +370,22 @@
 
                 <div class="text-center max-w-3xl mx-auto mb-12">
                     <h4 class="text-2xl md:text-3xl font-bold text-stone-900">ONDC Transaction Growth & Key Metrics</h4>
-                    <p class="mt-4 text-stone-600">Since its launch, ONDC has seen a steady increase in transactions and participant engagement, indicating growing momentum in its mission to democratize digital commerce.</p>
+                    <p class="mt-4 text-stone-600">Since its launch, ONDC has seen steady growth in transactions and participant engagement, indicating growing momentum in its mission to democratize digital commerce.</p>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto mb-16">
-                    <div>
-                        <div class="chart-container">
-                            <canvas id="transactionsChart"></canvas>
+                    <div class="bg-white p-6 rounded-xl shadow-lg">
+                        <h4 class="text-xl font-bold text-center mb-4 text-blue-600">📈 Transaction Growth Journey</h4>
+                        <ul class="custom-bullets space-y-3">
+                            <li><strong>March 2023 (Launch):</strong> Started with pilot transactions in select cities</li>
+                            <li><strong>September 2023:</strong> Expanded to multiple categories and cities</li>
+                            <li><strong>March 2024:</strong> Reached significant milestone with sustained growth</li>
+                            <li><strong>September 2024:</strong> Crossed 10 Crore cumulative transactions</li>
+                            <li><strong>March 2025:</strong> Achieved over 20.4 Crore total transactions</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-sm text-blue-800"><strong>Growth Rate:</strong> From pilot to 20+ Crore transactions in just 2 years shows promising adoption trajectory.</p>
                         </div>
-                        <p class="text-center text-sm text-stone-500 mt-2">Cumulative transactions growth since launch (March 2023 to March 2025).</p>
                     </div>
                     <div class="space-y-6 text-center md:text-left">
                         <div class="p-6 bg-stone-50 rounded-lg shadow-sm">
@@ -265,25 +403,34 @@
 
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="bg-stone-50 p-6 rounded-xl">
-                        <h4 class="font-bold text-center mb-2">User Experience Hurdles</h4>
-                        <div class="h-64">
-                            <canvas id="uxChart"></canvas>
-                        </div>
-                        <p class="text-center text-xs text-stone-500 mt-2">A majority of early users have found the system difficult to navigate, highlighting a key area for improvement.</p>
+                        <h4 class="font-bold text-center mb-4 text-red-600">👥 User Experience Challenges</h4>
+                        <ul class="custom-bullets space-y-2 text-sm">
+                            <li><strong>54% find it cumbersome:</strong> Navigation and discovery issues</li>
+                            <li><strong>46% are satisfied:</strong> Appreciate the concept and benefits</li>
+                            <li><strong>Key Issues:</strong> Complex onboarding, app fragmentation</li>
+                            <li><strong>Improvement Areas:</strong> Unified search, simpler interfaces</li>
+                        </ul>
+                        <p class="text-center text-xs text-stone-500 mt-4 bg-white p-2 rounded">Early adopter feedback from May 2025 surveys shows room for UX improvements.</p>
                     </div>
                     <div class="bg-stone-50 p-6 rounded-xl">
-                        <h4 class="font-bold text-center mb-2">Adoption & Trust</h4>
-                        <div class="h-64">
-                            <canvas id="adoptionChart"></canvas>
-                        </div>
-                        <p class="text-center text-xs text-stone-500 mt-2">While growing, adoption is still low, and building consumer trust without major brands is a slow process.</p>
+                        <h4 class="font-bold text-center mb-4 text-orange-600">🔐 Adoption & Trust Barriers</h4>
+                        <ul class="custom-bullets space-y-2 text-sm">
+                            <li><strong>35% cite poor service:</strong> Inconsistent quality across network</li>
+                            <li><strong>30% face tech hurdles:</strong> Integration and reliability issues</li>
+                            <li><strong>Trust Building:</strong> Slow process without major brand backing</li>
+                            <li><strong>Quality Control:</strong> Ensuring standards across diverse participants</li>
+                        </ul>
+                        <p class="text-center text-xs text-stone-500 mt-4 bg-white p-2 rounded">Growth is steady but adoption acceleration requires addressing these concerns.</p>
                     </div>
                      <div class="bg-stone-50 p-6 rounded-xl">
-                        <h4 class="font-bold text-center mb-2">Industry Outlook</h4>
-                        <div class="h-64">
-                            <canvas id="resistanceChart"></canvas>
-                        </div>
-                         <p class="text-center text-xs text-stone-500 mt-2">A significant portion of the industry expects pushback from established players whose business models are threatened by ONDC.</p>
+                        <h4 class="font-bold text-center mb-4 text-purple-600">🏭 Industry Resistance</h4>
+                        <ul class="custom-bullets space-y-2 text-sm">
+                            <li><strong>26% expect active resistance:</strong> From established platforms</li>
+                            <li><strong>34% see business model disruption:</strong> Threatens existing monopolies</li>
+                            <li><strong>Competitive Response:</strong> Platforms may create their own networks</li>
+                            <li><strong>Regulatory Support:</strong> Government backing crucial for success</li>
+                        </ul>
+                         <p class="text-center text-xs text-stone-500 mt-4 bg-white p-2 rounded">Industry expects significant pushback as ONDC gains momentum and threatens established players.</p>
                     </div>
                 </div>
             </div>
@@ -315,6 +462,7 @@
                 sectionObserver.observe(section);
             });
 
+            // Interactive model cards
             const inventoryCard = document.getElementById('inventory-model-card');
             const inventoryDetails = document.getElementById('inventory-details');
             inventoryCard.addEventListener('click', () => {
@@ -327,115 +475,13 @@
                 marketplaceDetails.classList.toggle('hidden');
             });
 
-            function createProblemChart() {
-                const ctx = document.getElementById('problemChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Dominant Platforms', 'Local Sellers'],
-                        datasets: [{
-                            label: 'Market Control & Visibility',
-                            data: [90, 25],
-                            backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(234, 179, 8, 0.7)'],
-                            borderColor: ['rgba(59, 130, 246, 1)', 'rgba(234, 179, 8, 1)'],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: 'The Power Imbalance' }
-                        },
-                        scales: { x: { beginAtZero: true, max: 100 } }
-                    }
-                });
-            }
-
-            function createBenefitsChart() {
-                const ctx = document.getElementById('benefitsChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Lower Commissions for Sellers', 'Wider Market Reach', 'Better Prices for Consumers', 'Hyperlocal Delivery'],
-                        datasets: [{
-                            data: [35, 30, 20, 15],
-                            backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#6366F1'],
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' },
-                            title: { display: true, text: 'ONDC Key Advantages' }
-                        }
-                    }
-                });
-            }
-
-            function createChallengeChart(canvasId, title, labels, data) {
-                 const ctx = document.getElementById(canvasId).getContext('2d');
-                 new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Percentage',
-                            data: data,
-                            backgroundColor: ['rgba(239, 68, 68, 0.7)','rgba(249, 115, 22, 0.7)'],
-                            borderColor: ['rgba(239, 68, 68, 1)','rgba(249, 115, 22, 1)'],
-                            borderWidth: 1
-                        }]
-                    },
-                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: title, font: { size: 14 } }
-                        },
-                        scales: { y: { beginAtZero: true, max: 100 } }
-                    }
-                 });
-            }
-
-            function createTransactionsChart() {
-                const ctx = document.getElementById('transactionsChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['March 2023 (Launch)', 'Sept 2023', 'March 2024', 'Sept 2024', 'March 2025'],
-                        datasets: [{
-                            label: 'Cumulative Transactions (Crore)',
-                            data: [0.00001, 0.001, 0.01, 10, 20.4], /* Data points are illustrative for intermediate periods, with 10 Crore by Sept 2024 and 20.4 Crore by March 2025 based on research */
-                            borderColor: '#3B82F6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: { display: true, text: 'ONDC Cumulative Transaction Growth' }
-                        },
-                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Number of Transactions (Crore)' } } }
-                    }
-                });
-            }
-
-            createProblemChart();
-            createBenefitsChart();
-            createChallengeChart('uxChart', 'User Experience (May 2025)', ['Find it cumbersome', 'Satisfied'], [54, 46]);
-            createChallengeChart('adoptionChart', 'Key Concerns', ['Poor Service', 'Tech Hurdles'], [35, 30]);
-            createChallengeChart('resistanceChart', 'Industry Expectations', ['Expect Resistance', 'Disrupts Models'], [26, 34]);
-            createTransactionsChart();
+            // Interactive architecture layers
+            window.toggleLayer = function(layerId) {
+                const layer = document.getElementById(layerId);
+                if (layer) {
+                    layer.classList.toggle('active');
+                }
+            };
 
         });
     </script>
